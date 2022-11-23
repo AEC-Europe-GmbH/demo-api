@@ -1,0 +1,9 @@
+server:
+  port: ${API_PORT:8085}
+
+spring:
+  application:
+    name: demo-api
+  cloud:
+    config:
+      uri: ${CONFIG_SERVER_URL:http://localhost:8888}
