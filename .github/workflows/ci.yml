@@ -42,7 +42,6 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: Development
-      url: 'http://dev.aecapp.com'
     steps:
       - name: Deploy
         run: echo dev deploy
@@ -54,7 +53,6 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: Staging
-      url: 'http://test.aecapp.com'
     steps:
       - name: Deploy
         run: echo test deploy
@@ -65,7 +63,6 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: Production
-      url: 'http://www.aecapp.com'
     steps:
       - name: Deploy
         run: echo prod deploy
