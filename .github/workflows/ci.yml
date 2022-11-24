@@ -51,7 +51,7 @@ jobs:
     needs: [ build ]
     runs-on: ubuntu-latest
     environment:
-      name: Staging
+      name: Test
     steps:
       - name: Deploy
         run: echo test deploy
