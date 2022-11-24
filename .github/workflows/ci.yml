@@ -48,7 +48,6 @@ jobs:
 
   deploy-test:
     name: Deploy to Test
-    if: github.event_name == 'pull_request'
     needs: [ build ]
     runs-on: ubuntu-latest
     environment:
