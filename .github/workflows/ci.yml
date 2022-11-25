@@ -50,9 +50,12 @@ jobs:
         uses: actions/checkout@v2
         
       - name: Set up JDK 19
+        id: steup-java-env
         uses: actions/setup-java@v3
         with:
           java-version: '19'
+          distribution: 'temurin'
+          cache: maven
           
       - name: maven build, clean
         run: |
