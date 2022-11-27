@@ -39,27 +39,27 @@ jobs:
       - name: Build and run tests
         run: mvn test clean
   
-  dockerize:
-    name: Dockerize
-    needs: [ build ]
+  docker-build:
+    name: Docker Push
+    needs: [build]
     runs-on: ubuntu-latest
-
     steps:
-    - uses: azure/docker-login@v1
-      with:
-        login-server: contoso.azurecr.io
+     - uses: actions/checkout@v2
+       name: Check out code
+
+     - uses: mr-smithers-excellent/docker-build-push@v5
+       name: Build & push Docker image
+       with:
+        image: myconreg2134.azurecr.io/demo-api
+        tags: v1.0,latest
+        registry: myconreg2134.azurecr.io
+        dockerfile: Dockerfile
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
 
-    - run: |
-        ls -la
-        cd .. & ls -la
-        docker build -t myconreg2134.azurecr.io/aa .
-        docker push myconreg2134.azurecr.io/aa
-
   deploy-dev:
     name: Deploy to Dev
-    needs: [ dockerize ]
+    needs: [ docker-build ]
     runs-on: ubuntu-latest
     environment:
       name: Development
