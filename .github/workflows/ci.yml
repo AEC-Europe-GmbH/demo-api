@@ -52,6 +52,7 @@ jobs:
         password: ${{ secrets.REGISTRY_PASSWORD }}
 
     - run: |
+        ls -la
         docker build -t myconreg2134.azurecr.io/aa .
         docker push myconreg2134.azurecr.io/aa
 
