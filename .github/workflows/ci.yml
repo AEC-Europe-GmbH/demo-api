@@ -52,8 +52,8 @@ jobs:
         password: ${{ secrets.REGISTRY_PASSWORD }}
 
     - run: |
-        docker build -t myconreg2134.azurecr.io/demo-api .
-        docker push myconreg2134.azurecr.io/demo-api
+        docker build -t myconreg2134.azurecr.io/aa .
+        docker push myconreg2134.azurecr.io/aa
 
   deploy-dev:
     name: Deploy to Dev
