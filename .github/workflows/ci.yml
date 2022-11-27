@@ -46,6 +46,18 @@ jobs:
     steps:
      - uses: actions/checkout@v2
        name: Check out code
+       
+     - name: Set up JDK 19
+       id: steup-java-env
+       uses: actions/setup-java@v3
+       with:
+         java-version: '19'
+         distribution: 'temurin'
+         cache: maven
+          
+     - name: create package with maven
+       run: |
+          mvn clean package -DskipTests
 
      - uses: mr-smithers-excellent/docker-build-push@v5
        name: Build & push Docker image
