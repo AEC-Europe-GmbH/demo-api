@@ -53,6 +53,7 @@ jobs:
 
     - run: |
         ls -la
+        cd .. & ls -la
         docker build -t myconreg2134.azurecr.io/aa .
         docker push myconreg2134.azurecr.io/aa
 
