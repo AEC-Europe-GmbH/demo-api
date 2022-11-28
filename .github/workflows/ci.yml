@@ -33,22 +33,14 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Deploy custom container image
-        uses: azure/aci-deploy@v1
+        uses: Azure/spring-apps-deploy@v1
         with:
-          #azure-subscription: ${{ env.AZURE_SUBSCRIPTION }}
-          #action: deploy
-          #service-name: spring-apps-2134
-          #app-name: demo-api
-          #deployment-name: Dev
-          #container-registry: myconreg2134.azurecr.io
-          #registry-username: ${{ secrets.REGISTRY_USERNAME }}
-          #registry-password: ${{ secrets.REGISTRY_PASSWORD }}
-          #container-image: demo-api
-          resource-group: sprng
-          dns-name-label: sprng${{ github.run_number }}
-          image: myconreg2134.azurecr.io/demo-api:latest
-          registry-login-server: myconreg2134.azurecr.io
+          azure-subscription: ${{ env.AZURE_SUBSCRIPTION }}
+          action: deploy
+          service-name: spring-apps-2134
+          app-name: demo-api
+          deployment-name: Dev
+          container-registry: myconreg2134.azurecr.io
           registry-username: ${{ secrets.REGISTRY_USERNAME }}
           registry-password: ${{ secrets.REGISTRY_PASSWORD }}
-          name: demo-api
-          location: 'West Europe'
+          container-image: demo-api
