@@ -27,13 +27,6 @@ jobs:
       name: Dev
 
     steps:
-      - name: Checkout GitHub Action
-        uses: actions/checkout@v3
-      
-      - name: maven build
-        run: |
-          mvn clean package -DskipTests
-
       - name: Login via Azure CLI
         uses: azure/login@v1
         with:
@@ -51,3 +44,4 @@ jobs:
           registry-password: ${{ secrets.REGISTRY_PASSWORD }}
           container-image: demo-api
           use-staging-deployment: false
+          package: ${{ github.workspace }}
