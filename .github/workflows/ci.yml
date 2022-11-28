@@ -45,6 +45,7 @@ jobs:
           #registry-password: ${{ secrets.REGISTRY_PASSWORD }}
           #container-image: demo-api
           resource-group: sprng
+          dns-name-label: sprng${{ github.run_number }}
           image: myconreg2134.azurecr.io/demo-api:latest
           registry-login-server: myconreg2134.azurecr.io
           registry-username: ${{ secrets.REGISTRY_USERNAME }}
