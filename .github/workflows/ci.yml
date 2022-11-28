@@ -89,6 +89,7 @@ jobs:
           registry-username: ${{ secrets.REGISTRY_USERNAME }}
           registry-password: ${{ secrets.REGISTRY_PASSWORD }}
           container-image: demo-api
+          use-staging-deployment: false
 
   deploy-test:
     name: Deploy to Test
