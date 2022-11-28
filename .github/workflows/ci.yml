@@ -16,6 +16,7 @@ on:
   workflow_dispatch:
 
 env:
+  ASC_PACKAGE_PATH: ${{ github.workspace }}
   AZURE_SUBSCRIPTION: 300f35f7-1c6d-4a2d-ab1d-e9e50bbaa671
 
 jobs:
@@ -76,8 +77,13 @@ jobs:
       name: Dev
 
     steps:
+      - name: Login via Azure CLI
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: Deploy custom container image
-        uses: Azure/spring-apps-deploy@v1
+        uses: azure/aci-deploy@v1
         with:
           azure-subscription: ${{ env.AZURE_SUBSCRIPTION }}
           action: deploy
