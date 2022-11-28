@@ -29,7 +29,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Set up JDK 19
-        id: steup-java-env
+        id: setup-java-env
         uses: actions/setup-java@v3
         with:
           java-version: '19'
@@ -37,48 +37,16 @@ jobs:
           cache: maven
 
       - name: Build and run tests
-        run: mvn test clean
-  
+        run: mvn clean test
+
   docker-build:
     name: Docker Push
     needs: [build]
     runs-on: ubuntu-latest
     steps:
-     - uses: actions/checkout@v3
-       name: Check out code
-       
-     - name: Set up JDK 19
-       id: steup-java-env
-       uses: actions/setup-java@v3
-       with:
-         java-version: '19'
-         distribution: 'temurin'
-         cache: maven
-          
-     - name: create package with maven
-       run: |
-          mvn clean package -DskipTests
+      - uses: actions/checkout@v3
+        name: Check out code
 
-     - uses: mr-smithers-excellent/docker-build-push@v5
-       name: Build & push Docker image
-       with:
-        image: demo-api
-        tags: v1.0,latest
-        registry: myconreg2134.azurecr.io
-        dockerfile: Dockerfile
-        username: ${{ secrets.REGISTRY_USERNAME }}
-        password: ${{ secrets.REGISTRY_PASSWORD }}
-
-  deploy-dev:
-    name: Deploy to Dev
-    needs: [ docker-build ]
-    runs-on: ubuntu-latest
-    environment:
-      name: Development
-    steps:
-      - name: Checkout Github Action
-        uses: actions/checkout@v3
-        
       - name: Set up JDK 19
         id: steup-java-env
         uses: actions/setup-java@v3
@@ -86,25 +54,41 @@ jobs:
           java-version: '19'
           distribution: 'temurin'
           cache: maven
-          
-      - name: maven build, clean
+
+      - name: create package with maven
         run: |
-          mvn clean package
-      
-      - name: Login via Azure CLI
-        uses: azure/login@v1
+          mvn clean package -DskipTests
+
+      - uses: mr-smithers-excellent/docker-build-push@v5
+        name: Build & push Docker image
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-      
-      - name: deploy to production with artifact
-        uses: azure/spring-apps-deploy@v1
+          image: demo-api
+          tags: v1.0,latest
+          registry: myconreg2134.azurecr.io
+          dockerfile: Dockerfile
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+  deploy-dev:
+    name: Deploy to Dev
+    needs: [ docker-build ]
+    runs-on: ubuntu-latest
+    environment:
+      name: Dev
+
+    steps:
+      - name: Deploy custom container image
+        uses: Azure/spring-apps-deploy@v1
         with:
           azure-subscription: ${{ env.AZURE_SUBSCRIPTION }}
-          action: Deploy
+          action: deploy
           service-name: spring-apps-2134
           app-name: demo-api
-          use-staging-deployment: false
-          package: ${{ env.ASC_PACKAGE_PATH }}/**/*.jar
+          deployment-name: Dev
+          container-registry: myconreg2134.azurecr.io
+          registry-username: ${{ secrets.REGISTRY_USERNAME }}
+          registry-password: ${{ secrets.REGISTRY_PASSWORD }}
+          container-image: demo-api
 
   deploy-test:
     name: Deploy to Test
@@ -112,7 +96,7 @@ jobs:
     needs: [ docker-build ]
     runs-on: ubuntu-latest
     environment:
-      name: Test
+      name: QA
     steps:
       - name: Deploy
         run: echo test deploy
@@ -122,7 +106,7 @@ jobs:
     needs: [ deploy-test ]
     runs-on: ubuntu-latest
     environment:
-      name: Production
+      name: Prod
     steps:
       - name: Deploy
         run: echo prod deploy
