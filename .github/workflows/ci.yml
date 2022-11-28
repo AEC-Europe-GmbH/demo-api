@@ -20,8 +20,58 @@ env:
   AZURE_SUBSCRIPTION: 300f35f7-1c6d-4a2d-ab1d-e9e50bbaa671
 
 jobs:
+  build:
+    name: Build and Test
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 19
+        id: setup-java-env
+        uses: actions/setup-java@v3
+        with:
+          java-version: '19'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build and run tests
+        run: mvn clean test
+
+  docker-build:
+    name: Docker Push
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        name: Check out code
+
+      - name: Set up JDK 19
+        id: steup-java-env
+        uses: actions/setup-java@v3
+        with:
+          java-version: '19'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: create package with maven
+        run: |
+          mvn clean package -DskipTests
+
+      - uses: mr-smithers-excellent/docker-build-push@v5
+        name: Build & push Docker image
+        with:
+          image: demo-api
+          tags: v1.0,latest
+          registry: myconreg2134.azurecr.io
+          dockerfile: Dockerfile
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
   deploy-dev:
     name: Deploy to Dev
+    needs: [ docker-build ]
     runs-on: ubuntu-latest
     environment:
       name: Dev
@@ -45,3 +95,24 @@ jobs:
           container-image: demo-api
           use-staging-deployment: false
           package: ${{ github.workspace }}
+
+  deploy-test:
+    name: Deploy to QA
+    if: github.event.ref == 'refs/heads/main'
+    needs: [ docker-build ]
+    runs-on: ubuntu-latest
+    environment:
+      name: QA
+    steps:
+      - name: Deploy
+        run: echo test deploy
+
+  deploy-prod:
+    name: Deploy to Production
+    needs: [ deploy-test ]
+    runs-on: ubuntu-latest
+    environment:
+      name: Prod
+    steps:
+      - name: Deploy
+        run: echo prod deploy
