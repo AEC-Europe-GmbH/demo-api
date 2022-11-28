@@ -16,7 +16,6 @@ on:
   workflow_dispatch:
 
 env:
-  ASC_PACKAGE_PATH: ${{ github.workspace }}
   AZURE_SUBSCRIPTION: 300f35f7-1c6d-4a2d-ab1d-e9e50bbaa671
 
 jobs:
@@ -89,7 +88,6 @@ jobs:
           registry-username: ${{ secrets.REGISTRY_USERNAME }}
           registry-password: ${{ secrets.REGISTRY_PASSWORD }}
           container-image: demo-api
-          use-staging-deployment: false
 
   deploy-test:
     name: Deploy to Test
