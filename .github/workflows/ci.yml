@@ -27,21 +27,23 @@ jobs:
       name: Dev
 
     steps:
+      - name: Checkout GitHub Action
+        uses: actions/checkout@v3
+
       - name: Login via Azure CLI
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Deploy custom container image
+      - name: Deploy Custom Image
         uses: Azure/spring-apps-deploy@v1
         with:
           azure-subscription: ${{ env.AZURE_SUBSCRIPTION }}
           action: deploy
           service-name: spring-apps-2134
           app-name: demo-api
-          deployment-name: Production
+          deployment-name: Dev
           container-registry: myconreg2134.azurecr.io
           registry-username: ${{ secrets.REGISTRY_USERNAME }}
           registry-password: ${{ secrets.REGISTRY_PASSWORD }}
           container-image: demo-api
-          use-staging-deployment: false
