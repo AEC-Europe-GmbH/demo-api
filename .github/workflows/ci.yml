@@ -39,8 +39,9 @@ jobs:
           action: deploy
           service-name: spring-apps-2134
           app-name: demo-api
-          deployment-name: Dev
+          deployment-name: Production
           container-registry: myconreg2134.azurecr.io
           registry-username: ${{ secrets.REGISTRY_USERNAME }}
           registry-password: ${{ secrets.REGISTRY_PASSWORD }}
           container-image: demo-api
+          use-staging-deployment: false
