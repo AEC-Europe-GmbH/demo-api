@@ -39,7 +39,7 @@ jobs:
         run: mvn clean test
   
   sonarqube:
-    name: Sonar Quality Check
+    name: Sonar Scan
     needs: [build]
     runs-on: ubuntu-latest
     steps:
