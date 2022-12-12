@@ -103,7 +103,7 @@ jobs:
       - name: Login via Azure CLI
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.QA_SUBSCRIPTION_ID }}
+          creds: ${{ secrets.QA_AZURE_CREDENTIALS }}
       
       - name: Deploy Custom Image
         uses: Azure/spring-apps-deploy@v1
